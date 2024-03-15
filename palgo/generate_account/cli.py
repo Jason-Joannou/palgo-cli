@@ -2,7 +2,8 @@ import argparse
 from generate_account import generate_account
 
 def main() -> None:
-    generate_account()
+    account = generate_account()
+    account.fund_address()
 
 
 if __name__ == "__main__":
