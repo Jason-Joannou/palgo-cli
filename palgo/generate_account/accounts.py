@@ -1,5 +1,5 @@
 from algosdk.v2client import algod
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import webbrowser
 import time
 import os
@@ -10,16 +10,17 @@ class Account:
     algod_client = algod.AlgodClient('', algod_address)
     algo_conversion = 0.000001
 
-    def __init__(self, address: str, private_key: str, pass_phrase: str) -> None:
+    def __init__(self, address: str, private_key: Optional[str] = "-", pass_phrase: Optional[str] = "-", to_file: bool = False) -> None:
         self.address = address
         self.private_key = private_key
-        self.pass_phrase =pass_phrase
+        self.pass_phrase = pass_phrase
+        self.to_file = to_file
     
     def account_info(self) -> Dict[str, Any]:
         try:
             return self.algod_client.account_info(self.address)
         except Exception as e:
-            print(f"Error fetching account info: {e}")
+            self.write_message(f"Error fetching account info: {e}")
             return {}
 
     def check_balance(self) -> int:
@@ -40,36 +41,29 @@ class Account:
             while self.check_balance() <= 1:
                 print(f"Waiting for address {self.address} to be funding...")
                 time.sleep(5)
-
-            print(f"Address {self.address} has been funded and has {self.check_balance()} algoes!")
-
-            return
-        
-        print(f"Address {self.address} has been funded and has {self.check_balance()} algoes!")
-        return
-    
-    def write_to_file(self, file_name: str = "test_accounts.txt", message: str = "None") -> None:
-        if not os.path.exists(file_name):
-            with open(file_name, "w") as file:
-                file.write("Private key: {}\n".format(self.private_key))
-                file.write("Address: {}\n".format(self.address))
-                file.write("Mnemonic phrase: {}\n".format(self.pass_phrase))
-                file.write("Message: {}\n".format(message))
-            print("Data written to", file_name)
+            
+            
+            self.write_message(f"Address {self.address} has been funded and has {self.check_balance()} algoes!")
         else:
-            with open(file_name, "a") as file:
-                file.write("\n")  # Add a newline before appending new data
-                file.write("Private key: {}\n".format(self.private_key))
-                file.write("Address: {}\n".format(self.address))
-                file.write("Mnemonic phrase: {}\n".format(self.pass_phrase))
-                file.write("Message: {}\n".format(message))
-            print("Data appended to", file_name)
+            self.write_message(f"Address {self.address} has been funded and has {self.check_balance()} algoes!")
+
+    
+    def write_message(self,message: str) -> None:
+        formatted_message = f"Private key: {self.private_key}\nAddress: {self.address}\nMnemonic phrase: {self.pass_phrase}\nMessage: {message}\n"
+        if self.to_file:
+            self.write_to_file(message=formatted_message)
+        else:
+            self.write_to_console(message=formatted_message)
+
+    def write_to_file(self, message: str, file_name: str = "./test_accounts.txt") -> None:
+        mode = "w" if not os.path.exists(file_name) else "a"
+        with open(file_name, mode) as file:
+            file.write("\n" if mode == "a" else "")  # Add a newline before appending new data
+            file.write(message)
+        print("Data written to" if mode == "w" else "Data appended to", file_name)
+
 
     def write_to_console(self, message: str) -> None:
-        print("Private key: {}".format(self.private_key))
-        print("Address: {}".format(self.address))
-        print("Mnemonic phrase: {}".format(self.pass_phrase))
-        print("Message: {}".format(message))
-        print("")
+        print(message)
 
 
