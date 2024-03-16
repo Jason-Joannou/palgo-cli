@@ -14,10 +14,10 @@ class InvalidAddressError(Exception):
         self.message = message
         super().__init__(self.message)
 
-def load_account(address, private_key, pass_phrase) -> Account:
-    return Account(address=address, private_key=private_key, pass_phrase=pass_phrase)
+def load_account(address: str, private_key: str, pass_phrase: str, to_file: bool) -> Account:
+    return Account(address=address, private_key=private_key, pass_phrase=pass_phrase, to_file=to_file)
 
-def generate_account() -> Account:
+def generate_account(to_file: bool) -> Account:
     # generate an account
     private_key, address = account.generate_account()
     pass_phrase = mnemonic.from_private_key(private_key)
@@ -26,7 +26,7 @@ def generate_account() -> Account:
     if not encoding.is_valid_address(address):
         raise InvalidAddressError()
     
-    user_account = load_account(address=address,private_key=private_key,pass_phrase=pass_phrase)
-    user_account.write_to_console(message=f"Account successfuly created on {datetime.today()}")
+    user_account = load_account(address=address,private_key=private_key,pass_phrase=pass_phrase,to_file=to_file)
+    user_account.write_message(message=f"Account successfuly created on {datetime.today()}")
     return user_account
 
