@@ -39,7 +39,7 @@ class Account:
                 print("URL:", "https://bank.testnet.algorand.network/")
 
             while self.check_balance() <= 1:
-                print(f"Waiting for address {self.address} to be funding...")
+                print(f"Waiting for address {self.address} to be funded...")
                 time.sleep(5)
             
             
