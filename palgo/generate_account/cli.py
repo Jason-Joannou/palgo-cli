@@ -1,5 +1,5 @@
 import argparse
-from generate_account import generate_account
+from .generate_account import generate_account
 
 def main(choice: str, to_file: bool, n_accounts: int) -> None:
     if choice == "fund":

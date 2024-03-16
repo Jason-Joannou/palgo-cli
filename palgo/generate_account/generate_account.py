@@ -1,6 +1,6 @@
 from algosdk import account, encoding, mnemonic
 import os
-from accounts import Account
+from .accounts import Account
 from datetime import datetime
 from typing import List
 
