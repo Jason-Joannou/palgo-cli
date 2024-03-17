@@ -4,12 +4,6 @@ from ..accounts import Account
 from datetime import datetime
 from typing import List
 
-# TODO
-# Once account is created
-# Load with algoes ( optional )
-# If yes, automatically load with algoes
-# If no, prompt the user to fill the account with algoes and continously check in intervals if done so
-
 class InvalidAddressError(Exception):
     def __init__(self, message="The address is invalid, please try creating a new account.") -> None:
         self.message = message
