@@ -2,6 +2,14 @@ import argparse
 from .generate_account import generate_account
 
 def main(choice: str, to_file: bool, n_accounts: int) -> None:
+    """
+    Main function to execute the desired action based on user input.
+
+    Parameters:
+        choice (str): The user's choice of action ("Create" or "Fund").
+        to_file (bool): Flag indicating whether to save generated accounts to file.
+        n_accounts (int): The number of accounts to generate.
+    """
     if choice == "fund":
         accounts = generate_account(to_file=to_file, n_accounts=n_accounts)
         for account in accounts:

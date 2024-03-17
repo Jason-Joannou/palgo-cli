@@ -5,7 +5,9 @@ from ..generate_account import generate_account, InvalidAddressError
 
 @pytest.fixture
 def mock_algo_gen_account():
-
+    """
+    Fixture for mocking the Algorand SDK's account generation function.
+    """
     with patch("algosdk.account.generate_account") as mock_gen:
         mock_instance = mock_gen
         mock_instance.return_value = ("private_key","address")
@@ -14,7 +16,9 @@ def mock_algo_gen_account():
 
 @pytest.fixture
 def mock_mnemonic():
-
+    """
+    Fixture for mocking the Algorand SDK's mnemonic generation function.
+    """
     with patch("algosdk.mnemonic.from_private_key") as mock_mn:
         mock_instance = mock_mn
         mock_instance.return_value = "mnemonic"
@@ -23,7 +27,9 @@ def mock_mnemonic():
 
 @pytest.fixture
 def mock_encoding():
-
+    """
+    Fixture for mocking the Algorand SDK's address validation function.
+    """
     with patch("algosdk.encoding.is_valid_address") as mock_mn:
         mock_instance = mock_mn
         mock_instance.return_value = True
@@ -31,8 +37,14 @@ def mock_encoding():
         yield mock_instance
 
 def test_generate_account(mock_algo_gen_account, mock_mnemonic, mock_encoding):
+    """
+    Test case for the generate_account function.
 
-    # These asserts can be split into their own methods
+    Parameters:
+        mock_algo_gen_account: Mocked Algorand account generation function.
+        mock_mnemonic: Mocked Algorand mnemonic generation function.
+        mock_encoding: Mocked Algorand address validation function.
+    """
     wf = False
     n_accounts = 1
     test_pk, test_address = ("private_key","address")
@@ -44,7 +56,14 @@ def test_generate_account(mock_algo_gen_account, mock_mnemonic, mock_encoding):
     assert test_address == address, f"Validation failed, test address '{test_address}' is not matching returned address '{address}'"
 
 def test_mnemonic(mock_algo_gen_account, mock_mnemonic, mock_encoding):
-    # These asserts can be split into their own methods
+    """
+    Test case for the mnemonic generation function.
+
+    Parameters:
+        mock_algo_gen_account: Mocked Algorand account generation function.
+        mock_mnemonic: Mocked Algorand mnemonic generation function.
+        mock_encoding: Mocked Algorand address validation function.
+    """
     wf = False
     n_accounts = 1
     test_mnemonic = "mnemonic"
@@ -56,8 +75,14 @@ def test_mnemonic(mock_algo_gen_account, mock_mnemonic, mock_encoding):
 
 
 def test_encoding(mock_algo_gen_account, mock_mnemonic, mock_encoding):
+    """
+    Test case for the address validation function.
 
-    # These asserts can be split into their own methods
+    Parameters:
+        mock_algo_gen_account: Mocked Algorand account generation function.
+        mock_mnemonic: Mocked Algorand mnemonic generation function.
+        mock_encoding: Mocked Algorand address validation function.
+    """
     wf = False
     n_accounts = 1
 
@@ -69,7 +94,14 @@ def test_encoding(mock_algo_gen_account, mock_mnemonic, mock_encoding):
         test_account = generate_account(to_file=wf,n_accounts=n_accounts)
 
 def test_account_return(mock_algo_gen_account, mock_mnemonic, mock_encoding):
+    """
+    Test case for verifying the type of the returned account.
 
+    Parameters:
+        mock_algo_gen_account: Mocked Algorand account generation function.
+        mock_mnemonic: Mocked Algorand mnemonic generation function.
+        mock_encoding: Mocked Algorand address validation function.
+    """
     wf = False
     n_accounts = 1
 
