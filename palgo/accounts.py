@@ -1,8 +1,9 @@
 from algosdk.v2client import algod
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import webbrowser
 import time
 import os
+from algosdk import transaction
 
 class Account:
 
@@ -65,5 +66,49 @@ class Account:
 
     def write_to_console(self, message: str) -> None:
         print(message)
+
+class MultiSigAccount():
+
+    algod_address = "https://testnet-api.algonode.cloud"
+    algod_client = algod.AlgodClient('', algod_address)
+    algo_conversion = 0.000001
+
+    def __init__(self, accounts: List[Account], version: Optional[int] = 1, threshold: Optional[int] = 2, to_file: bool = False) -> None:
+        self.version = version
+        self.threshold = threshold
+        self.to_file = to_file
+        self.addresses = [account.address for account in accounts]
+        self.account = transaction.Multisig(version=self.version, threshold=self.threshold, addresses=self.addresses)
+        
+
+    def get_multisig_address(self):
+        return self.account.address()
+    
+    def get_multisig_account(self):
+        return self.account.get_multisig_account()
+
+    def write_message(self,message: str) -> None:
+        formatted_message = f"Multi-Address: {self.get_multisig_address()}\nMessage: {message}\n"
+        if self.to_file:
+            self.write_to_file(message=formatted_message)
+        else:
+            self.write_to_console(message=formatted_message)
+
+    def write_to_file(self, message: str, file_name: str = "./test_accounts.txt") -> None:
+        mode = "w" if not os.path.exists(file_name) else "a"
+        with open(file_name, mode) as file:
+            file.write("\n" if mode == "a" else "")  # Add a newline before appending new data
+            file.write(message)
+        print("Data written to" if mode == "w" else "Data appended to", file_name)
+
+
+    def write_to_console(self, message: str) -> None:
+        print(message)
+
+    
+
+
+
+
 
 
